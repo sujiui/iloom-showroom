@@ -1930,6 +1930,18 @@ img { background: #F0EEE8; }
   font-size: 16px; color: #C0392B;
   margin-top: 10px; line-height: 1.8;
 }
+.price-tab-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+.price-tab-footnote {
+  font-size: 13px;
+  color: #C0392B;
+  line-height: 1.7;
+  padding-top: 6px;
+}
 </style>
 </head>
 <body>
@@ -2213,10 +2225,16 @@ img { background: #F0EEE8; }
         <p class="slide-intro fade-up-2">타사 베이직 가격에 타사 프리미엄 부품·표면재 · 그것이 컬렉트 키큰옷장의 경쟁력입니다.</p>
 
         <div class="price-shell">
-          <!-- 탭 -->
-          <div class="price-tabs fade-up-3">
-            <button class="price-tab active" data-cat="builtin" onclick="switchPriceCat('builtin')">입주박람회 특가</button>
-            <button class="price-tab" data-cat="closet" onclick="switchPriceCat('closet')">상시 가격</button>
+          <!-- 탭 + 각주 -->
+          <div class="price-tab-row fade-up-3">
+            <div class="price-tabs">
+              <button class="price-tab active" data-cat="builtin" onclick="switchPriceCat('builtin')">입주박람회 특가</button>
+              <button class="price-tab" data-cat="closet" onclick="switchPriceCat('closet')">상시 가격</button>
+            </div>
+            <div class="price-tab-footnote" id="priceTabFootnote">
+              * <strong style="color:#C0392B;">일룸 입주박람회 특가:</strong> 입주 프로모션(200만 원 이상 구매 시 -10만 원) 반영 금액<br>
+              * <strong style="color:#C0392B;">타사 가격:</strong> 입주 프로모션 최대 할인가 추정(100만 원 단위 할인 + 옷장 5% 등) 반영 기준이며, 실제 시점·조건에 따라 다를 수 있습니다.
+            </div>
           </div>
 
           <!-- 캐러셀 스테이지 -->
@@ -2272,11 +2290,6 @@ img { background: #F0EEE8; }
           </div>
 
           <div class="price-dots" id="priceDots"></div>
-        </div>
-
-        <div class="unit-price-footnote fade-up-4">
-          * <strong style="color:#C0392B;">일룸 입주박람회 특가:</strong> 입주 프로모션(200만 원 이상 구매 시 -10만 원) 반영 금액<br>
-          * <strong style="color:#C0392B;">타사 가격:</strong> 입주 프로모션 최대 할인가 추정(100만 원 단위 할인 + 옷장 5% 등) 반영 기준이며, 실제 시점·조건에 따라 다를 수 있습니다.
         </div>
 
       </section>
@@ -2764,7 +2777,7 @@ const PRICE_DATA = {
       config: '기본장 + 긴장 + 2단 속서랍', size: '3통 · 3,000폭',
       iloomLine: '리디', iloomOld: null, iloomFinal: 1600000,
       stoneOld: null, stoneFinal: 1630000,
-      hansamLine: '베이직', hansamOld: null, hansamFinal: 1646000,
+      hansamLine: '베이직', hansamOld: 1646000, hansamFinal: 1481400,
       visual: {
         surround: false,
         modules: [
@@ -2780,7 +2793,7 @@ const PRICE_DATA = {
       config: '기본장 + 2단 속서랍', size: '2통 · 2,800폭',
       iloomLine: '리디', iloomOld: null, iloomFinal: 1115000,
       stoneOld: null, stoneFinal: 1133000,
-      hansamLine: '베이직', hansamOld: null, hansamFinal: 1187000,
+      hansamLine: '베이직', hansamOld: 1187000, hansamFinal: 1068300,
       visual: {
         surround: false,
         modules: [
@@ -2797,10 +2810,16 @@ const PRICE_DATA = {
 let priceCat = 'builtin';
 let priceIdx = 0;
 
+const PRICE_FOOTNOTES = {
+  builtin: `* <strong style="color:#C0392B;">일룸 입주박람회 특가:</strong> 입주 프로모션(200만 원 이상 구매 시 -10만 원) 반영 금액<br>* <strong style="color:#C0392B;">타사 가격:</strong> 입주 프로모션 최대 할인가 추정(100만 원 단위 할인 + 옷장 5% 등) 반영 기준이며, 실제 시점·조건에 따라 다를 수 있습니다.`,
+  closet:  `* <strong style="color:#C0392B;">일룸 상시 가격:</strong> 할인 미적용 정가 기준이며, 프로모션 시행 시 변동될 수 있습니다.<br>* <strong style="color:#C0392B;">타사 가격:</strong> 입주 프로모션 최대 할인가 추정(100만 원 단위 할인 + 옷장 5% 등) 반영 기준이며, 실제 시점·조건에 따라 다를 수 있습니다.`
+};
+
 function switchPriceCat(cat) {
   priceCat = cat;
   priceIdx = 0;
   document.querySelectorAll('.price-tab').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  document.getElementById('priceTabFootnote').innerHTML = PRICE_FOOTNOTES[cat];
   renderPrice();
   userInteract();
 }
